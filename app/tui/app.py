@@ -5,6 +5,7 @@ import json
 from textwrap import shorten
 from typing import Any
 
+import httpx
 from rich.json import JSON
 from rich.markdown import Markdown
 from rich.panel import Panel
@@ -147,6 +148,23 @@ class AStockTUI(App[None]):
     def _activate_tab(self, tab_id: str) -> None:
         self.query_one("#detail-tabs", TabbedContent).active = tab_id
 
+    def _format_request_error(self, exc: Exception) -> str:
+        if isinstance(exc, httpx.HTTPStatusError):
+            response = exc.response
+            detail = response.text
+            try:
+                payload = response.json()
+                detail = payload.get("detail", detail)
+            except ValueError:
+                pass
+            return f"{response.status_code} {response.reason_phrase}: {detail}"
+        return str(exc)
+
+    def _show_request_error(self, title: str, exc: Exception) -> None:
+        message = self._format_request_error(exc)
+        self._set_status(f"{title}失败")
+        self._log(f"{title}.error", message, "red")
+
     def _collect_analysis_payload(self) -> dict[str, Any]:
         return {
             "symbol": self.query_one("#symbol-input", Input).value.strip(),
@@ -215,7 +233,11 @@ class AStockTUI(App[None]):
         payload = self._collect_analysis_payload()
         self._set_status("正在执行多智能体分析")
         self._log("analysis.request", json.dumps(payload, ensure_ascii=False, indent=2), "yellow")
-        result = await self.backend.analyze(payload)
+        try:
+            result = await self.backend.analyze(payload)
+        except Exception as exc:
+            self._show_request_error("analysis", exc)
+            return
         self._log(
             "analysis.response",
             shorten(result["summary"], width=400, placeholder="..."),
@@ -239,7 +261,11 @@ class AStockTUI(App[None]):
             "provider": self.query_one("#search-select", Select).value,
         }
         self._log("search.request", json.dumps(payload, ensure_ascii=False, indent=2), "blue")
-        result = await self.backend.search(payload)
+        try:
+            result = await self.backend.search(payload)
+        except Exception as exc:
+            self._show_request_error("search", exc)
+            return
         self._set_detail("#sources-view", Markdown(format_sources(result["items"])))
         self._activate_tab("sources-tab")
         self._set_status(f"{result['provider']} 返回 {len(result['items'])} 条来源")
@@ -247,10 +273,14 @@ class AStockTUI(App[None]):
     async def run_market(self) -> None:
         symbol = self.query_one("#symbol-input", Input).value.strip()
         period = "5min" if self.query_one("#minutes-checkbox", Checkbox).value else "daily"
-        kline, fundamentals = await asyncio.gather(
-            self.backend.kline(symbol, period),
-            self.backend.fundamentals(symbol),
-        )
+        try:
+            kline, fundamentals = await asyncio.gather(
+                self.backend.kline(symbol, period),
+                self.backend.fundamentals(symbol),
+            )
+        except Exception as exc:
+            self._show_request_error("market", exc)
+            return
         payload = {"kline": kline["items"][-5:], "fundamentals": fundamentals["metrics"]}
         self._set_detail("#market-view", JSON.from_data(payload))
         self._activate_tab("market-tab")
@@ -263,7 +293,11 @@ class AStockTUI(App[None]):
             "content": self.query_one("#query-input", TextArea).text.strip(),
             "importance": 0.75,
         }
-        await self.backend.remember(payload)
+        try:
+            await self.backend.remember(payload)
+        except Exception as exc:
+            self._show_request_error("memory.remember", exc)
+            return
         self._set_detail("#memory-view", Markdown("已写入短期与长期记忆。"))
         self._activate_tab("memory-tab")
         self._set_status("记忆写入完成")
@@ -275,7 +309,11 @@ class AStockTUI(App[None]):
             "query": self.query_one("#query-input", TextArea).text.strip(),
             "limit": 5,
         }
-        result = await self.backend.recall(payload)
+        try:
+            result = await self.backend.recall(payload)
+        except Exception as exc:
+            self._show_request_error("memory.recall", exc)
+            return
         self._log("memory.recall", json.dumps(result, ensure_ascii=False, indent=2), "magenta")
         self._set_detail("#memory-view", Markdown(format_memory(result)))
         self._activate_tab("memory-tab")

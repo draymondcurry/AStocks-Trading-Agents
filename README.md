@@ -24,14 +24,10 @@
 
 ```bash
 git clone <your-repo-url>
-<<<<<<< HEAD
 cd Finance
 cp .env.example .env
 mkdir -p data logs
-=======
-cd <this file>
 copy .env.example .env
->>>>>>> d3150f380a20dbff82cfde0efc9806b59d7f0040
 pip install -r requirements.txt
 ```
 

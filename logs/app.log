@@ -102,3 +102,24 @@
 {"asctime": "2026-05-06 13:55:37,233", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: POST https://api.deepseek.com/chat/completions \"HTTP/1.1 200 OK\""}
 {"asctime": "2026-05-06 13:55:37,753", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: POST https://api.deepseek.com/chat/completions \"HTTP/1.1 200 OK\""}
 {"asctime": "2026-05-06 13:55:47,450", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: POST https://api.deepseek.com/chat/completions \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,598", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/health \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,611", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/providers/status \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,636", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/frontend/bootstrap \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,671", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/v1/search/query \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,686", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/market/kline?symbol=000001&period=daily \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,687", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/market/fundamentals?symbol=000001 \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,732", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/v1/memory/remember \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,736", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/v1/memory/recall \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,753", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/v1/analysis/stock-pick \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,763", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/health \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,764", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/providers/status \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,765", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/frontend/bootstrap \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:20,769", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/v1/analysis/stock-pick \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:21,094", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/health \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:21,095", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/providers/status \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:21,110", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/frontend/bootstrap \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:21,220", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/v1/search/query \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:21,356", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/market/kline?symbol=000001&period=5min \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:21,357", "levelname": "INFO", "name": "httpx", "message": "HTTP Request: GET http://testserver/api/v1/market/fundamentals?symbol=000001 \"HTTP/1.1 200 OK\""}
+{"asctime": "2026-05-06 16:33:21,420", "levelname": "ERROR", "name": "asyncio", "message": "Task was destroyed but it is pending!\ntask: <Task cancelling name='Animator' coro=<Timer._run_timer() running at C:\\Users\\Administrator\\anaconda3\\envs\\finance\\Lib\\site-packages\\textual\\timer.py:112> wait_for=<Task cancelled name='Task-381' coro=<sleep.<locals>.wait() done, defined at C:\\Users\\Administrator\\anaconda3\\envs\\finance\\Lib\\site-packages\\textual\\_win_sleep.py:110>>>"}
+{"asctime": "2026-05-06 16:33:21,421", "levelname": "ERROR", "name": "asyncio", "message": "Task was destroyed but it is pending!\ntask: <Task cancelling name='set_interval#1' coro=<Timer._run_timer() running at C:\\Users\\Administrator\\anaconda3\\envs\\finance\\Lib\\site-packages\\textual\\timer.py:112> wait_for=<Task cancelled name='Task-353' coro=<sleep.<locals>.wait() done, defined at C:\\Users\\Administrator\\anaconda3\\envs\\finance\\Lib\\site-packages\\textual\\_win_sleep.py:110>>>"}
