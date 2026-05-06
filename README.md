@@ -24,9 +24,14 @@
 
 ```bash
 git clone <your-repo-url>
+<<<<<<< HEAD
 cd Finance
 cp .env.example .env
 mkdir -p data logs
+=======
+cd <this file>
+copy .env.example .env
+>>>>>>> d3150f380a20dbff82cfde0efc9806b59d7f0040
 pip install -r requirements.txt
 ```
 
@@ -55,7 +60,7 @@ Windows PowerShell 也可以使用脚本启动 TUI：
 ```bash
 conda env create -f environment.yml
 conda activate astock-alpha
-cp .env.example .env
+cp .env.example .env  # Windows用copy，Linux用cp
 mkdir -p data logs
 pip install -r requirements.txt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000

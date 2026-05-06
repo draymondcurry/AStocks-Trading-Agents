@@ -22,6 +22,8 @@ Screen {
 #sidebar {
     row-span: 2;
     padding: 1 1;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #stream-panel,
