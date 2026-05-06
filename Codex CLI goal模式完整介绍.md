@@ -1,6 +1,7 @@
 本项目完全基于Codex CLI 0.128.0（2026 年 4 月 30 日发布）新增的`/goal`模式进行开发。官方对于`/goal`模式的原表述为：
 > Added persisted /goal workflows with app-server APIs, model tools, runtime continuation, and TUI controls for create, pause, resume, and clear.
 这套命令是Ralph Loop的落地示例，是典型的`goal driven`模式，即：**你给定一个目标即可，系统会自动朝着你这个目标进行开发→测试→修正**。
+>
 项目共运行1小时30分钟左右，一共使用了以下三条命令：
 ### 后端构建
 ```bash
