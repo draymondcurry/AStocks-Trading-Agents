@@ -24,7 +24,7 @@
 
 ```bash
 git clone <your-repo-url>
-cd Finance
+cd <this file>
 copy .env.example .env
 pip install -r requirements.txt
 ```
