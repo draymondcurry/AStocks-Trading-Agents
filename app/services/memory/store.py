@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import math
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import aiosqlite
 
@@ -22,6 +23,9 @@ class MemoryStore:
         self.connection: aiosqlite.Connection | None = None
 
     async def initialize(self) -> None:
+        db_parent = Path(self.db_path).expanduser().parent
+        if str(db_parent) not in ("", "."):
+            db_parent.mkdir(parents=True, exist_ok=True)
         self.connection = await aiosqlite.connect(self.db_path)
         await self.connection.executescript(
             """
@@ -153,4 +157,3 @@ class MemoryStore:
                 }
             )
         return sorted(scored, key=lambda item: item["score"], reverse=True)[:limit]
-

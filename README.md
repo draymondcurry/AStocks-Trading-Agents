@@ -25,9 +25,12 @@
 ```bash
 git clone <your-repo-url>
 cd Finance
-copy .env.example .env
+cp .env.example .env
+mkdir -p data logs
 pip install -r requirements.txt
 ```
+
+> Windows PowerShell 使用 `copy .env.example .env` 和 `New-Item -ItemType Directory -Force data, logs`。
 
 启动后端 API：
 
@@ -52,7 +55,8 @@ Windows PowerShell 也可以使用脚本启动 TUI：
 ```bash
 conda env create -f environment.yml
 conda activate astock-alpha
-copy .env.example .env
+cp .env.example .env
+mkdir -p data logs
 pip install -r requirements.txt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
@@ -72,7 +76,8 @@ python -m app.tui.main
 Docker Compose 会启动 API、Prometheus 和 Grafana。
 
 ```bash
-copy .env.example .env
+cp .env.example .env
+mkdir -p data logs
 docker compose up --build
 ```
 
@@ -94,6 +99,14 @@ TUI_SESSION_ID=terminal-default
 DEFAULT_LLM_PROVIDER=
 DEFAULT_SEARCH_PROVIDER=
 ```
+
+运行时目录说明：
+
+- `data/`：保存 SQLite 记忆库，默认路径由 `MEMORY_DB_PATH=./data/memory.db` 控制
+- `logs/`：保存后端运行日志，默认写入 `logs/app.log`
+- `data/*.db`、`data/*.sqlite3`、`logs/*.log` 属于运行时产物，不建议提交到 GitHub
+- 新服务器首次 clone 后只需要保留目录并启动服务，SQLite 会自动创建 `memory.db` 和表结构
+- 如果要迁移已有记忆数据，请用 `scp`、`rsync` 或服务器备份方式单独复制 `data/memory.db`，不要把数据库文件提交到仓库
 
 常用配置：
 
@@ -164,12 +177,12 @@ python -m pytest
 │   │   └── styles.tcss
 │   └── main.py
 ├── data
-│   └── memory.db
+│   └── .gitkeep
 ├── docker
 │   ├── prometheus.yml
 │   └── grafana
 ├── logs
-│   └── app.log
+│   └── .gitkeep
 ├── scripts
 │   ├── bootstrap.ps1
 │   └── run_tui.ps1
@@ -533,4 +546,3 @@ q       退出 TUI
 ---
 
 祝你研究顺利，交易冷静，数据说话。📊🚀
-
