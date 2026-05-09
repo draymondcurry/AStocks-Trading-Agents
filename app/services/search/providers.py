@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 from urllib.parse import urlparse
 
 import httpx
@@ -18,6 +19,43 @@ def classify_source(url: str) -> str:
     if any(token in host for token in ["stcn", "cs.com", "eastmoney", "10jqka", "caixin", "yicai"]):
         return "news"
     return "social"
+
+
+def safe_float(value: Any, default: float = 0.5) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def parse_datetime(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def extract_search_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    data = payload.get("data")
+    candidates: Any = None
+
+    if isinstance(data, dict):
+        web_pages = data.get("webPages")
+        if isinstance(web_pages, dict):
+            candidates = web_pages.get("value")
+        candidates = candidates or data.get("results") or data.get("items")
+    elif isinstance(data, list):
+        candidates = data
+
+    candidates = candidates or payload.get("results") or payload.get("items") or []
+    if isinstance(candidates, dict):
+        candidates = candidates.get("value") or candidates.get("items") or []
+    if not isinstance(candidates, list):
+        return []
+
+    return [row for row in candidates if isinstance(row, dict)]
 
 
 class MockSearchProvider(BaseSearchProvider):
@@ -63,15 +101,23 @@ class BochaSearchProvider(BaseSearchProvider):
             response.raise_for_status()
             data = response.json()
         items = []
-        for row in data.get("data", data.get("results", [])):
-            url = row.get("url") or row.get("link") or ""
+        for row in extract_search_rows(data):
+            url = row.get("url") or row.get("link") or row.get("displayUrl") or ""
+            title = row.get("title") or row.get("name") or ""
+            snippet = row.get("snippet") or row.get("summary") or row.get("description") or ""
             items.append(
                 SourceItem(
-                    title=row.get("title", ""),
+                    title=title,
                     url=url,
-                    snippet=row.get("snippet", row.get("summary", "")),
+                    snippet=snippet,
                     source_type=classify_source(url),
-                    score=float(row.get("score", 0.5)),
+                    published_at=parse_datetime(row.get("datePublished") or row.get("dateLastCrawled")),
+                    score=safe_float(row.get("score"), 0.5),
+                    metadata={
+                        "provider": self.provider,
+                        "site_name": row.get("siteName"),
+                        "display_url": row.get("displayUrl"),
+                    },
                 )
             )
         return self.rank(items[:max_results])
@@ -106,4 +152,3 @@ class GoogleSearchProvider(BaseSearchProvider):
                 )
             )
         return self.rank(items[:max_results])
-
